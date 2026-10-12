@@ -1,0 +1,89 @@
+# Copy to config/pipeline.yaml (git-ignored) and edit.
+# Every path, date window and identifier lives here: nothing is hardcoded in src/.
+
+paths:
+  campaigns: data/campaigns.csv          # columns: campaign_name, title, message
+  app_events: data/app_events.parquet    # columns: user_id, event, event_date
+  notification_events_dir: data/events   # events_YYYY-MM-DD.parquet (or .csv), one per day
+  raw_events_dir: data/raw/events        # optional: JSON-lines exports for `ccp ingest`
+  artifacts_dir: artifacts
+  reports_dir: reports
+
+# Names used in the notification events' `event_name` column.
+notification_events:
+  sent: sent
+  clicked: clicked
+
+# Only user IDs starting with this prefix are kept (use "" to keep all).
+user_id_prefix: ""
+
+windows:
+  # Training uses THREE consecutive, non-overlapping windows. Features come from
+  # the first, labels from the second, and forward validation from the third.
+  # This avoids the label-window leakage described in docs/lessons-learned.md.
+  feature_start: "2024-01-01"
+  feature_end: "2024-02-14"
+  label_start: "2024-02-15"
+  label_end: "2024-03-30"
+  validation_start: "2024-03-31"
+  validation_end: "2024-05-14"
+  # Lifetime flags (has_premium, ...) look back to this date, and never past the
+  # end of the feature window.
+  lifetime_floor: "2023-01-01"
+  # Daily scoring: rolling window length in days (same length as the feature window).
+  rolling_days: 45
+
+classification:
+  use_semantic: false            # true needs requirements-optional.txt
+  semantic_model: "all-MiniLM-L6-v2"
+  semantic_min_confidence: 0.20  # below this goes to the review file, not to a category
+  overrides_file: config/overrides.example.yaml
+  taxonomy_file: config/taxonomy.example.yaml
+
+features:
+  mapping_file: config/features.example.yaml
+
+ingest:
+  # Fail the run if more than this share of parsed rows lack a user_id or campaign_name.
+  max_null_rate: 0.01
+  allowed_suffixes: [".jsonl", ".jsonl.gz", ".json.gz"]
+  # Dotted JSON paths. The first path that yields a value wins.
+  fields:
+    event_name: ["event_name", "eventName"]
+    campaign_name: ["campaign_name", "eventProps.Campaign name", "eventProps.campaign name"]
+    user_id: ["user_id", "profile.identity"]
+    ts: ["ts", "timestamp"]
+  ts_format: "%Y%m%d%H%M%S"
+
+model:
+  params:
+    objective: multiclass
+    metric: multi_logloss
+    boosting_type: gbdt
+    num_leaves: 63
+    learning_rate: 0.05
+    feature_fraction: 0.8
+    bagging_fraction: 0.8
+    bagging_freq: 5
+    verbose: -1
+    seed: 42
+  num_boost_round: 1000
+  early_stopping_rounds: 50
+  min_class_samples: 10     # training stops with a clear error if a class has fewer rows
+  split:
+    test_size: 0.15
+    val_size: 0.15
+    seed: 42
+  # Optional per-class sample weights by class name, e.g. {"Travel": 2.0}. Empty = unweighted.
+  class_weights: {}
+
+output:
+  mapping_file: artifacts/campaign_mapping.csv
+  labels_file: artifacts/labels.parquet
+  train_features_file: artifacts/train_features.parquet
+  model_file: artifacts/model.txt
+  model_config_file: artifacts/model_config.json
+  predictions_file: artifacts/predictions.parquet
+  review_file: reports/campaigns_needing_review.csv
+  train_metrics_file: reports/train_metrics.json
+  validation_file: reports/validation.json

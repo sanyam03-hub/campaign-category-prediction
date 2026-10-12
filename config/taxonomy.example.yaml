@@ -1,0 +1,62 @@
+# 10 campaign-type categories and ordered keyword rules.
+# ORDER MATTERS: the first category whose keyword appears wins.
+# These keywords are generic examples. Replace them with rules for your own data.
+
+categories:
+  - Referral
+  - Onboarding
+  - Travel
+  - Offers & Promotions
+  - Forex & Remittance
+  - Product Discovery
+  - Upsell & Cross-sell
+  - Activation & Usage
+  - Reactivation
+  - Educational Content
+
+rules:
+  - category: Forex & Remittance
+    keywords: [forex, currency, exchange rate, remittance, money transfer]
+  - category: Referral
+    keywords: [referral, refer a friend, invite]
+  - category: Onboarding
+    keywords: [onboarding, welcome, verify identity, kyc, card delivered]
+  - category: Reactivation
+    keywords: [reactivation, win back, dormant, we miss you]
+    # Skip the rule if any of these also appear in the name.
+    exclude: [active users]
+  - category: Travel
+    keywords: [hotel, flight, esim, travel, trip]
+  - category: Offers & Promotions
+    keywords: [sale, discount, cashback offer, festive, coupon]
+  - category: Product Discovery
+    keywords: [premium, fixed deposit, lounge, security update, new feature]
+  - category: Upsell & Cross-sell
+    keywords: [credit card, upgrade, increase limit, cross-sell]
+  - category: Activation & Usage
+    keywords: [first transaction, load money, spend, upi]
+  - category: Educational Content
+    keywords: [newsletter, tips, guide, webinar]
+
+# Campaign names that carry no information. They are dropped BEFORE classification,
+# because classifying them would assign arbitrary categories.
+generic_name_patterns:
+  - '^pn\s*\d*$'
+  - '^sms\s*\d*$'
+  - '^wa\s*\d*$'
+  - '^email\s*\d*$'
+  - '^day\s*\d+\s*-\s*pn\d*'
+  - '^test\s*push'
+
+# Descriptions used by the optional semantic fallback.
+category_descriptions:
+  Referral: "Refer and earn, invite friends, referral bonus"
+  Onboarding: "New user account setup, identity verification, welcome, card delivery"
+  Travel: "Hotel booking, travel eSIM, flights, trips abroad"
+  Offers & Promotions: "Limited time sale, discount code, festive deal"
+  Forex & Remittance: "Currency exchange, live rates, send money abroad"
+  Product Discovery: "Premium membership, fixed deposits, lounge access, security features"
+  Upsell & Cross-sell: "Get a credit card, upgrade plan, increase limit"
+  Activation & Usage: "Encourage first transaction, load money, use your card"
+  Reactivation: "Win back dormant users, we miss you, come back"
+  Educational Content: "Newsletter, tips and guides, webinars"

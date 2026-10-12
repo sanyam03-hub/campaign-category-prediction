@@ -1,0 +1,38 @@
+# Maps each app-behaviour feature to generic event names in your app_events table.
+#
+# kind: count -> number of matching events inside the feature window
+# kind: flag  -> 1 if any matching event exists up to the cutoff date, else 0
+#
+# Replace the event names with the ones your own dataset uses. Feature names are
+# the model's input columns, in this order. Do not reorder after training.
+
+features:
+  - {name: tenure_days,        kind: tenure, events: [account_created]}
+  - {name: card_activated,     kind: flag,   events: [card_activated]}
+  - {name: pin_set,            kind: flag,   events: [pin_set]}
+  - {name: total_debit_txn,    kind: count,  events: [debit_txn]}
+  - {name: total_credit_txn,   kind: count,  events: [credit_txn]}
+  - {name: has_intl_txn,       kind: flag,   events: [international_txn]}
+  - {name: upi_txn_count,      kind: count,  events: [upi_txn]}
+  - {name: low_balance_count,  kind: count,  events: [low_balance]}
+  - {name: flights_searched,   kind: count,  events: [flight_search]}
+  - {name: flights_booked,     kind: count,  events: [flight_booked]}
+  - {name: hotels_searched,    kind: count,  events: [hotel_search]}
+  - {name: hotels_booked,      kind: count,  events: [hotel_booked]}
+  - {name: has_esim,           kind: flag,   events: [esim_issued]}
+  - {name: forex_ordered,      kind: count,  events: [forex_order]}
+  - {name: forex_rate_checked, kind: count,  events: [forex_rate_check]}
+  - {name: remittance_count,   kind: count,  events: [remittance_started]}
+  - {name: has_premium,        kind: flag,   events: [premium_activated]}
+  - {name: premium_expired,    kind: flag,   events: [premium_expired]}
+  - {name: has_credit_card,    kind: flag,   events: [credit_card_issued]}
+  - {name: fd_interest,        kind: count,  events: [fd_list_viewed]}
+  - {name: app_logins,         kind: count,  events: [login_success]}
+  - {name: passport_verified,  kind: flag,   events: [passport_verified]}
+  - {name: successful_referrals, kind: count, events: [referral_success]}
+  - {name: rewards_earned,     kind: count,  events: [reward_earned]}
+
+# Column in the app_events table that holds the account type event, if any.
+# Leave empty to skip the account_type feature.
+account_type:
+  enabled: false

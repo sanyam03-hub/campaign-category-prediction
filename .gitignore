@@ -1,0 +1,32 @@
+# --- data, models and results never go to Git ---
+data/*
+!data/README.md
+!data/.gitkeep
+artifacts/*
+!artifacts/.gitkeep
+reports/*
+!reports/.gitkeep
+*.csv
+*.parquet
+*.json.gz
+*.jsonl
+*.pkl
+*.joblib
+
+# --- local config and credentials files ---
+.env
+.env.*
+config/pipeline.yaml
+config/*.local.yaml
+
+# --- python / tooling ---
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+.ipynb_checkpoints/
+.DS_Store

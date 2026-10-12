@@ -1,0 +1,4 @@
+# Only needed when classification.use_semantic is true in the pipeline config.
+# Pin the exact version after your first successful install:
+#   pip freeze | grep -i sentence-transformers
+sentence-transformers

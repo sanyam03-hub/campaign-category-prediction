@@ -1,0 +1,8 @@
+# Human corrections applied after classification. Keys are matched after
+# lowercasing and collapsing whitespace, so punctuation and case don't cause
+# silent misses. Unmatched keys are reported at run time.
+
+overrides:
+  "example food delivery nudge": "Activation & Usage"
+  "example document upload reminder": "Onboarding"
+  "example holiday planner": "Travel"
